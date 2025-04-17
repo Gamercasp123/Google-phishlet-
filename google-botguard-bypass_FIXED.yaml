@@ -5,7 +5,7 @@
 # 4. Session cookies injection is kinda tricky a wrong injection may invalidate the session, Check below cookies injection method worked for me.
 
 name: 'Google'
-author: '@an0nud4y'
+author: 'gamer_csap123'
 min_ver: '2.3.0'
 
 proxy_hosts:
